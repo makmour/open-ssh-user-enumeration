@@ -60,12 +60,12 @@ pip3 install -r requirements.txt
 
 ### Basic
 ```bash
-python3 45233_final_fixed7.py <hostname> --userList wordlist.txt
+python3 open-ssh-ue.py <hostname> --userList wordlist.txt
 ```
 
 ### Full Example
 ```bash
-python3 45233_final_fixed7.py li758-175.members.linode.com \
+python3 open-ssh-ue.py hostname \
   --userList usernames.txt \
   --threads 10 \
   --outputFile results.json \
