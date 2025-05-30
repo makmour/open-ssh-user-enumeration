@@ -66,7 +66,7 @@ python3 open-ssh-ue.py <hostname> --userList wordlist.txt
 ### Full Example
 ```bash
 python3 open-ssh-ue.py hostname \
-  --userList usernames.txt \
+  --userList wordlist.txt \
   --threads 10 \
   --outputFile results.json \
   --outputFormat json
