@@ -1,8 +1,9 @@
-# open-ssh-user-enumeration
+# OpenSSH Username Enumeration Script (CVE-2018-15473)
 
-OpenSSH through 7.7 is prone to a user enumeration vulnerability due to not delaying bailout for an invalid authenticating user until after the packet containing the request has been fully parsed, related to auth2-gss.c, auth2-hostbased.c, and auth2-pubkey.c.
+This script checks for the OpenSSH 7.7 (and prior) username enumeration vulnerability (CVE-2018-15473).
+It sends a malformed authentication packet and interprets the SSH server’s response to identify valid usernames.
 
-CVE: CVE-2018-15473
+---
 
 ## original code:
 https://www.exploit-db.com/download/45233
@@ -43,34 +44,66 @@ Disabled Paramiko's noisy internal logging.
 Replaced deprecated or redundant exception-handling patterns.
 Applied consistent spacing/indentation (converted all tabs to 4 spaces).
 
-## Dependencies
+## Requirements
 
-Before running the updated code, you need to install the `ssh2-python` library:
+- Python 3.6+
+- Paramiko (tested with v3.4.0+)
 
-``` pip install ssh2-python ```
+Install dependencies:
+```bash
+pip3 install -r requirements.txt
+```
+
+---
 
 ## Usage
 
-``` 
-usage: open-ssh-ue.py [-h] [--port PORT] [--threads THREADS] [--outputFile OUTPUTFILE] [--outputFormat {list,json,csv}] (--username USERNAME | --userList USERLIST) hostname
+### Basic
+```bash
+python3 45233_final_fixed7.py <hostname> --userList wordlist.txt
+```
 
-positional arguments:
-hostname The target hostname or ip address
+### Full Example
+```bash
+python3 45233_final_fixed7.py li758-175.members.linode.com \
+  --userList usernames.txt \
+  --threads 10 \
+  --outputFile results.json \
+  --outputFormat json
+```
 
-options:
-  -h, --help      show this help message and exit
-  --port PORT      The target port
-  --threads THREADS      The number of threads to be used
-  --outputFile OUTPUTFILE      The output file location
-  --outputFormat {list,json,csv}      The output file format
-  --username USERNAME      The single username to validate
-  --userList USERLIST      The list of usernames (one per line) to enumerate through
-  ```
+---
 
-## Example
+## Arguments
 
-python3 open-ssh-ue.py target.hostname.com --userList usernames.txt
+### Positional
+- `hostname`: The target SSH server IP or domain.
 
-## Disclaimer
+### Optional
+- `--port`: SSH port (default is `22`)
+- `--threads`: Number of concurrent threads (default is `5`)
+- `--userList`: Path to a username list file (one username per line)
+- `--username`: Test a single username
+- `--outputFile`: Path to save results (optional; prints to terminal if omitted)
+- `--outputFormat`: Output format: `list`, `json`, or `csv` (default: `list`)
 
-Please use this script responsibly and only on systems where you have permission to access. Unauthorized access to a system can lead to severe legal consequences.
+---
+
+## Output Formats
+
+- `list`: Plain text per-username result
+- `json`: Structured list of valid/invalid usernames
+- `csv`: Comma-separated values
+
+---
+
+## Legal Disclaimer
+
+Use this tool **only on systems you own or have explicit permission to test**.
+Unauthorized use is illegal and unethical.
+
+---
+
+## Reference
+
+- [CVE-2018-15473 – OpenSSH Username Enumeration](https://nvd.nist.gov/vuln/detail/CVE-2018-15473)
